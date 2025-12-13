@@ -1,15 +1,12 @@
-using Configs;
 using Scellecs.Morpeh;
-using Unity.IL2CPP.CompilerServices;
 using UnityEngine;
-using View;
+using Unity.IL2CPP.CompilerServices;
 
 [System.Serializable]
 [Il2CppSetOption(Option.NullChecks, false)]
 [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
 [Il2CppSetOption(Option.DivideByZeroChecks, false)]
-public struct PlayerComponent : IComponent 
+public struct TransformComponent : IComponent 
 {
-    public Transform playerTransform;
-    public PlayerConfig playerConfig;
+    
 }

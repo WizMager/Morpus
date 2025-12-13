@@ -28,7 +28,7 @@ public sealed class PlayerMoveSystem : ISystem
             return;
 
         ref var playerComponent = ref _playerStash.Get(_filter.First());
-        playerComponent.playerView.Move(directionComponent.direction * playerComponent.playerConfig.MoveSpeed * deltaTime);
+        playerComponent.playerTransform.Translate(new Vector3(directionComponent.direction.x, 0, directionComponent.direction.y) * playerComponent.playerConfig.MoveSpeed * deltaTime);
     }
 
     public void Dispose()

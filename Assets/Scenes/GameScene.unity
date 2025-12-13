@@ -307,7 +307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializedData:
-    playerView: {fileID: 342709776}
+    playerTransform: {fileID: 342709780}
     playerConfig: {fileID: 11400000, guid: ea07a0e22dcd657429c90315ab6c4ac5, type: 2}
 --- !u!114 &342709776
 MonoBehaviour:
