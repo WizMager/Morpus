@@ -47,22 +47,19 @@ public sealed class EnemyInitializeSystem : IInitializer
             var enemyView = Object.Instantiate(_prefabsConfig.EnemyPrefab, _spawnEnemyPositionService.GetPosition(), Quaternion.identity).GetComponent<EnemyView>();
             var enemyEntity = World.CreateEntity();
 
-            AddEnemy(enemyEntity, enemyView);
+            AddEnemy(enemyEntity);
             AddHealth(enemyEntity, enemyData.health);
             AddTransform(enemyEntity, enemyView.transform);
             
-            SetColor(enemyView, enemyData.color, materialPropertyBlock);
+            SetColor(enemyEntity, enemyView, enemyData.color, materialPropertyBlock);
         }
     }
 
-    private void AddEnemy(Entity enemyEntity, EnemyView enemyView)
+    private void AddEnemy(Entity enemyEntity)
     {
         var enemyStash = World.GetStash<EnemyComponent>();
         
-        enemyStash.Add(enemyEntity, new EnemyComponent
-        {
-            enemyView = enemyView
-        });
+        enemyStash.Add(enemyEntity);
     }
     
     private void AddHealth(Entity enemyEntity, float health)
@@ -85,8 +82,15 @@ public sealed class EnemyInitializeSystem : IInitializer
         });
     }
     
-    private void SetColor(EnemyView enemyView, Color color, MaterialPropertyBlock materialPropertyBlock)
+    private void SetColor(Entity entity, EnemyView enemyView, Color color, MaterialPropertyBlock materialPropertyBlock)
     {
+        var rendererStash = World.GetStash<RendererComponent>();
+        
+        rendererStash.Add(entity, new RendererComponent
+        {
+            value = enemyView.Renderer
+        });
+        
         enemyView.Renderer.GetPropertyBlock(materialPropertyBlock);
         materialPropertyBlock.SetColor("_BaseColor", color);
         enemyView.Renderer.SetPropertyBlock(materialPropertyBlock);

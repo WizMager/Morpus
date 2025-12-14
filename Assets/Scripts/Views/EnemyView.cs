@@ -7,10 +7,5 @@ namespace Views
         [SerializeField] private Renderer _renderer;
         
         public Renderer Renderer => _renderer;
-
-        public void VisibleEnable(bool isVisible)
-        {
-            gameObject.SetActive(isVisible);
-        }
     }
 }

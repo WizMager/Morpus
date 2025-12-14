@@ -42,7 +42,7 @@ public class Bootstrap : MonoBehaviour
                 updateSystemGroup.AddSystem(new PlayerMoveSystem());
                 updateSystemGroup.AddSystem(new InputSystem());
                 updateSystemGroup.AddSystem(new DealDamageSystem());
-                updateSystemGroup.AddSystem(new DeadSystem());
+                updateSystemGroup.AddSystem(new RespawnEnemySystem(_spawnEnemyPositionService, _enemyConfig));
                 
                 return updateSystemGroup;
         }

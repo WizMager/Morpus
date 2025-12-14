@@ -1,6 +1,5 @@
 using Scellecs.Morpeh;
 using Unity.IL2CPP.CompilerServices;
-using Views;
 
 [System.Serializable]
 [Il2CppSetOption(Option.NullChecks, false)]
@@ -8,5 +7,4 @@ using Views;
 [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 public struct EnemyComponent : IComponent 
 {
-    public EnemyView enemyView;
 }
