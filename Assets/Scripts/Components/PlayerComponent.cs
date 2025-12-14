@@ -1,8 +1,5 @@
-using Configs;
 using Scellecs.Morpeh;
 using Unity.IL2CPP.CompilerServices;
-using UnityEngine;
-using View;
 
 [System.Serializable]
 [Il2CppSetOption(Option.NullChecks, false)]
@@ -10,6 +7,5 @@ using View;
 [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 public struct PlayerComponent : IComponent 
 {
-    public Transform playerTransform;
-    public PlayerConfig playerConfig;
+    
 }

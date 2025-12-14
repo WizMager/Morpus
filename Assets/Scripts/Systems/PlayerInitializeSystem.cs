@@ -1,3 +1,4 @@
+using Configs;
 using Scellecs.Morpeh;
 using Unity.IL2CPP.CompilerServices;
 using UnityEngine;
@@ -7,19 +8,102 @@ using UnityEngine;
 [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 public sealed class PlayerInitializeSystem : IInitializer 
 {
+    private readonly PrefabsConfig _prefabsConfig;
+    private readonly PlayerConfig _playerConfig;
+    
     public World World { get; set;}
 
+    public PlayerInitializeSystem(
+        PrefabsConfig prefabsConfig,
+        PlayerConfig playerConfig
+    )
+    {
+        _prefabsConfig = prefabsConfig;
+        _playerConfig = playerConfig;
+    }
+    
     public void OnAwake()
     {
-        var players = World.Filter.With<PlayerComponent>().Build();
-        var directionStash = World.GetStash<MoveDirectionComponent>();
+        var playerInstance = Object.Instantiate(_prefabsConfig.PlayerPrefab);
+        var playerEntity = World.CreateEntity();
+        
+        AddPlayer(playerEntity);
+        AddTransform(playerEntity, playerInstance.transform);
+        AddDirection(playerEntity);
+        AddMoveSpeed(playerEntity);
+        AddDamagePerSecond(playerEntity);
+        AddAttackRadius(playerEntity);
+        
+        SetupCamera(playerInstance.transform);
+    }
 
-        directionStash.Add(players.First(), new MoveDirectionComponent
+    private void AddPlayer(Entity playerEntity)
+    {
+        var playerStash = World.GetStash<PlayerComponent>();
+        
+        playerStash.Add(playerEntity, new PlayerComponent());
+    }
+    
+    private void AddTransform(Entity playerEntity, Transform playerTransform)
+    {
+        var transformStash = World.GetStash<TransformComponent>();
+        
+        transformStash.Add(playerEntity, new TransformComponent
+        {
+            transform = playerTransform
+        });
+    }
+    
+    private void AddDirection(Entity playerEntity)
+    {
+        var directionStash = World.GetStash<MoveDirectionComponent>();
+        
+        directionStash.Add(playerEntity, new MoveDirectionComponent
         {
             direction = Vector2.zero
         });
     }
+    
+    private void AddMoveSpeed(Entity playerEntity)
+    {
+        var moveSpeedStash = World.GetStash<MoveSpeedComponent>();
+        
+        moveSpeedStash.Add(playerEntity, new MoveSpeedComponent
+        {
+            value = _playerConfig.MoveSpeed
+        });
+    }
+    
+    private void AddDamagePerSecond(Entity playerEntity)
+    {
+        var damagePerSecondStash = World.GetStash<DamagePerSecondComponent>();
+        
+        damagePerSecondStash.Add(playerEntity, new DamagePerSecondComponent
+        {
+            value = _playerConfig.DamagePerSecond
+        });
+    }
 
+    private void AddAttackRadius(Entity playerEntity)
+    {
+        var damageRadiusStash = World.GetStash<AttackRadiusComponent>();
+        
+        damageRadiusStash.Add(playerEntity, new AttackRadiusComponent
+        {
+            value = _playerConfig.DamageRadius
+        });
+    }
+
+    private void SetupCamera(Transform playerTransform)
+    {
+        var virtualCameraEntity = World.Filter.With<VirtualCameraComponent>().Build().First();
+        var virtualCameraStash = World.GetStash<VirtualCameraComponent>();
+        ref var virtualCameraComponent = ref virtualCameraStash.Get(virtualCameraEntity);
+        
+        virtualCameraComponent.virtualCamera.Follow = playerTransform;
+        virtualCameraComponent.virtualCamera.LookAt = playerTransform;
+    }
+    
     public void Dispose()
     {
 

@@ -1,12 +1,14 @@
+using Configs;
 using Scellecs.Morpeh;
-using UnityEngine;
 using Unity.IL2CPP.CompilerServices;
+using UnityEngine;
 
 [System.Serializable]
 [Il2CppSetOption(Option.NullChecks, false)]
 [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
 [Il2CppSetOption(Option.DivideByZeroChecks, false)]
-public struct TransformComponent : IComponent 
+public struct EnemyComponent : IComponent 
 {
-    public Transform transform;
+    public EnemyConfig enemyConfig;
+    public Renderer modelRenderer;
 }

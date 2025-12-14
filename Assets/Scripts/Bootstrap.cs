@@ -1,8 +1,12 @@
-﻿using Scellecs.Morpeh;
+﻿using Configs;
+using Scellecs.Morpeh;
 using UnityEngine;
 
 public class Bootstrap : MonoBehaviour
 {
+        [SerializeField] private PrefabsConfig _prefabsConfig;
+        [SerializeField] private PlayerConfig _playerConfig;
+        
         private World _world;
 
         private void Start()
@@ -17,7 +21,7 @@ public class Bootstrap : MonoBehaviour
         { 
                 var initializeSystemGroup = _world.CreateSystemsGroup();
                 
-                initializeSystemGroup.AddInitializer(new PlayerInitializeSystem());
+                initializeSystemGroup.AddInitializer(new PlayerInitializeSystem(_prefabsConfig, _playerConfig));
 
                 return initializeSystemGroup;
         }

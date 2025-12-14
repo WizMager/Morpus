@@ -9,7 +9,8 @@ public sealed class PlayerMoveSystem : ISystem
 {
     private Filter _filter;
     private Stash<MoveDirectionComponent> _directionStash;
-    private Stash<PlayerComponent> _playerStash;
+    private Stash<TransformComponent> _transformStash;
+    private Stash<MoveSpeedComponent> _moveSpeedStash;
 
     public World World { get; set; }
 
@@ -17,7 +18,8 @@ public sealed class PlayerMoveSystem : ISystem
     {
         _filter = World.Filter.With<PlayerComponent>().With<MoveDirectionComponent>().Build();
         _directionStash = World.GetStash<MoveDirectionComponent>();
-        _playerStash = World.GetStash<PlayerComponent>();
+        _transformStash = World.GetStash<TransformComponent>();
+        _moveSpeedStash = World.GetStash<MoveSpeedComponent>();
     }
 
     public void OnUpdate(float deltaTime)
@@ -27,8 +29,9 @@ public sealed class PlayerMoveSystem : ISystem
         if (directionComponent.direction == Vector2.zero)
             return;
 
-        ref var playerComponent = ref _playerStash.Get(_filter.First());
-        playerComponent.playerTransform.Translate(new Vector3(directionComponent.direction.x, 0, directionComponent.direction.y) * playerComponent.playerConfig.MoveSpeed * deltaTime);
+        ref var transformComponent = ref _transformStash.Get(_filter.First());
+        ref var moveSpeedComponent = ref _moveSpeedStash.Get(_filter.First());
+        transformComponent.transform.Translate(new Vector3(directionComponent.direction.x, 0, directionComponent.direction.y) * moveSpeedComponent.value * deltaTime);
     }
 
     public void Dispose()

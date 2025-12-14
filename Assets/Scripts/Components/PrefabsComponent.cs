@@ -1,12 +1,13 @@
 using Scellecs.Morpeh;
-using UnityEngine;
+using Scellecs.Morpeh.Providers;
 using Unity.IL2CPP.CompilerServices;
 
 [System.Serializable]
 [Il2CppSetOption(Option.NullChecks, false)]
 [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
 [Il2CppSetOption(Option.DivideByZeroChecks, false)]
-public struct TransformComponent : IComponent 
+public struct PrefabsComponent : IComponent 
 {
-    public Transform transform;
+    public EntityProvider playerPrefab;
+    public EntityProvider[] enemyPrefabs;
 }
