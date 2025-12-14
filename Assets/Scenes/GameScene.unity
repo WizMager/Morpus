@@ -488,6 +488,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefabsConfig: {fileID: 11400000, guid: f55a964a74e62504a901d9461c60f5c1, type: 2}
   _playerConfig: {fileID: 11400000, guid: ea07a0e22dcd657429c90315ab6c4ac5, type: 2}
+  _enemyConfig: {fileID: 11400000, guid: 1f966f313c4f81f46b4cc9ac1e364f33, type: 2}
+  _gameConfig: {fileID: 11400000, guid: 4ae219f7ed5a33f4b9c9eb0f1385c7c7, type: 2}
 --- !u!4 &649564472
 Transform:
   m_ObjectHideFlags: 0
@@ -730,7 +732,7 @@ Transform:
   m_GameObject: {fileID: 1811177310}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 1, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

@@ -92,8 +92,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7771991875527397607}
-  - component: {fileID: 7771991875527397602}
-  - component: {fileID: 7771991875527397628}
   m_Layer: 0
   m_Name: P_Player
   m_TagString: Untagged
@@ -117,31 +115,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &7771991875527397602
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7771991875527397630}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0.5, z: 0}
---- !u!114 &7771991875527397628
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7771991875527397630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9419f054d3cc44ac8cf4cf71086e001d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializedData:
-    playerTransform: {fileID: 7771991875527397607}
-    playerConfig: {fileID: 11400000, guid: ea07a0e22dcd657429c90315ab6c4ac5, type: 2}
