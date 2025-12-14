@@ -8,5 +8,5 @@ using Unity.IL2CPP.CompilerServices;
 [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 public struct VirtualCameraComponent : IComponent 
 {
-    public CinemachineVirtualCamera virtualCamera;
+    public CinemachineVirtualCamera value;
 }

@@ -1,7 +1,7 @@
-﻿using Services.UiService;
-using UnityEngine;
+﻿using UnityEngine;
+using Utils;
 
-namespace Configs.Player
+namespace Configs
 {
     [CreateAssetMenu(fileName = "PlayerConfig", menuName = "Configs/PlayerConfig")]
     public class PlayerConfig : ScriptableObject
@@ -10,8 +10,7 @@ namespace Configs.Player
         [SerializeField] private float _damagePerSecond = 10;
         [SerializeField] private float _damageRadius = 2;
         [SerializeField] private int _maxTarget = 3;
-        [SerializeField] private LevelUpStep[] _levelUpStep;
-        [SerializeField] private StatUpData[] _statUpData;
+        [SerializeField] private LevelUpStatData[] _levelUpStep;
         
         public float MoveSpeed => _moveSpeed;
         public float DamagePerSecond => _damagePerSecond;
@@ -20,12 +19,12 @@ namespace Configs.Player
 
         public float LevelUpStep(EStat stat)
         {
-            foreach (var levelUpStep in _levelUpStep)
+            foreach (var levelUpStatData in _levelUpStep)
             {
-                if (levelUpStep.stat != stat)
+                if (levelUpStatData.stat != stat)
                     continue;
                 
-                return levelUpStep.value;
+                return levelUpStatData.value;
             }
 
             return -1;
@@ -33,12 +32,12 @@ namespace Configs.Player
 
         public float StatUpChance(EStat stat)
         {
-            foreach (var statUpData in _statUpData)
+            foreach (var levelUpStatData in _levelUpStep)
             {
-                if (statUpData.stat != stat)
+                if (levelUpStatData.stat != stat)
                     continue;
                 
-                return statUpData.chance;
+                return levelUpStatData.chance;
             }
 
             return -1;

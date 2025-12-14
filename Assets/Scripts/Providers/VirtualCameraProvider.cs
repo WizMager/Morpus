@@ -6,5 +6,4 @@ using Unity.IL2CPP.CompilerServices;
 [Il2CppSetOption(Option.DivideByZeroChecks, false)]
 public sealed class VirtualCameraProvider : MonoProvider<VirtualCameraComponent> 
 {
-    
 }

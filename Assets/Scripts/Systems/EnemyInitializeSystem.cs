@@ -1,6 +1,5 @@
 using System;
 using Configs;
-using Configs.Enemy;
 using Scellecs.Morpeh;
 using Services.SpawnEnemyPosition;
 using Unity.IL2CPP.CompilerServices;
@@ -78,7 +77,7 @@ public sealed class EnemyInitializeSystem : IInitializer
         
         transformStash.Add(enemyEntity, new TransformComponent
         {
-            transform = transform
+            value = transform
         });
     }
     
@@ -98,6 +97,5 @@ public sealed class EnemyInitializeSystem : IInitializer
 
     public void Dispose()
     {
-
     }
 }

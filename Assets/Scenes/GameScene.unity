@@ -1836,7 +1836,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializedData:
-    virtualCamera: {fileID: 993392167}
+    value: {fileID: 993392167}
 --- !u!1 &1088852541
 GameObject:
   m_ObjectHideFlags: 0

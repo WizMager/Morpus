@@ -1,7 +1,8 @@
 ﻿using System;
-using Configs.Player;
+using Configs;
 using Scellecs.Morpeh;
 using UniRx;
+using Utils;
 using Random = UnityEngine.Random;
 
 namespace Services.UiService
@@ -101,11 +102,6 @@ namespace Services.UiService
                 return EStat.AttackRadius;
             
             return EStat.MoveSpeed;
-        }
-        
-        public void Dispose()
-        {
-            
         }
     }
 }

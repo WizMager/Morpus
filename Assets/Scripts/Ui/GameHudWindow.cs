@@ -1,10 +1,11 @@
 ﻿using System.Globalization;
-using Configs.Player;
+using Configs;
 using Services.UiService;
 using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils;
 
 namespace Ui
 {

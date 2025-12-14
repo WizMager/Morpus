@@ -1,6 +1,4 @@
-using System;
 using Configs;
-using Configs.Player;
 using Scellecs.Morpeh;
 using Unity.IL2CPP.CompilerServices;
 using UnityEngine;
@@ -67,7 +65,7 @@ public sealed class PlayerInitializeSystem : IInitializer
         
         targetCountStash.Add(playerEntity, new TargetCountComponent
         {
-            targets = 0
+            targetsNumber = 0
         });
     }
     
@@ -77,7 +75,7 @@ public sealed class PlayerInitializeSystem : IInitializer
         
         transformStash.Add(playerEntity, new TransformComponent
         {
-            transform = playerTransform
+            value = playerTransform
         });
     }
     
@@ -137,12 +135,11 @@ public sealed class PlayerInitializeSystem : IInitializer
         var virtualCameraStash = World.GetStash<VirtualCameraComponent>();
         ref var virtualCameraComponent = ref virtualCameraStash.Get(virtualCameraEntity);
         
-        virtualCameraComponent.virtualCamera.Follow = playerTransform;
-        virtualCameraComponent.virtualCamera.LookAt = playerTransform;
+        virtualCameraComponent.value.Follow = playerTransform;
+        virtualCameraComponent.value.LookAt = playerTransform;
     }
     
     public void Dispose()
     {
-
     }
 }

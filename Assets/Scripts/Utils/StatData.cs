@@ -1,4 +1,4 @@
-﻿namespace Services.UiService
+﻿namespace Utils
 {
     public struct StatData
     {

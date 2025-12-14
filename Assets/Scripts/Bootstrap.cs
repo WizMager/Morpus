@@ -1,6 +1,4 @@
 ﻿using Configs;
-using Configs.Enemy;
-using Configs.Player;
 using Scellecs.Morpeh;
 using Services.SpawnEnemyPosition;
 using Services.UiService;
@@ -24,7 +22,7 @@ public class Bootstrap : MonoBehaviour
         {
                 _world = World.Default;
                 
-                _spawnEnemyPositionService = new SpawnEnemyPositionService(1.5f, _gameConfig.EnemySpawnRadius, _world);
+                _spawnEnemyPositionService = new SpawnEnemyPositionService(_gameConfig.SafeRadius, _gameConfig.EnemySpawnRadius, _world);
                 _uiProvider = new UiProvider(_playerConfig, _world);
                 
                 _gameHudWindow.Initialize(_uiProvider, _playerConfig);

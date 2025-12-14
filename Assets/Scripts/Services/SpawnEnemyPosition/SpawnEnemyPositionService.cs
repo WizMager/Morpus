@@ -25,7 +25,7 @@ namespace Services.SpawnEnemyPosition
             var attempts = 0;
             var maxAttempts = 10;
             
-            var playerPosition = _transformStash.Get(_filter.First()).transform.position;
+            var playerPosition = _transformStash.Get(_filter.First()).value.position;
         
             do {
                 var randomCircle = Random.insideUnitCircle * _spawnRadius;

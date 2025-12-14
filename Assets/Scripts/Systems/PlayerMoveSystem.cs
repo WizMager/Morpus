@@ -24,14 +24,15 @@ public sealed class PlayerMoveSystem : ISystem
 
     public void OnUpdate(float deltaTime)
     {
-        ref var directionComponent = ref _directionStash.Get(_filter.First());
+        var playerEntity = _filter.First();
+        ref var directionComponent = ref _directionStash.Get(playerEntity);
         
         if (directionComponent.direction == Vector2.zero)
             return;
 
-        ref var transformComponent = ref _transformStash.Get(_filter.First());
-        ref var moveSpeedComponent = ref _moveSpeedStash.Get(_filter.First());
-        transformComponent.transform.Translate(new Vector3(directionComponent.direction.x, 0, directionComponent.direction.y) * moveSpeedComponent.value * deltaTime);
+        ref var transformComponent = ref _transformStash.Get(playerEntity);
+        ref var moveSpeedComponent = ref _moveSpeedStash.Get(playerEntity);
+        transformComponent.value.Translate(new Vector3(directionComponent.direction.x, 0, directionComponent.direction.y) * moveSpeedComponent.value * deltaTime);
     }
 
     public void Dispose()

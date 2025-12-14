@@ -1,6 +1,7 @@
 using Scellecs.Morpeh;
 using Services.UiService;
 using Unity.IL2CPP.CompilerServices;
+using Utils;
 
 [Il2CppSetOption(Option.NullChecks, false)]
 [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
@@ -56,6 +57,5 @@ public sealed class LevelUpSystem : ISystem
 
     public void Dispose()
     {
-
     }
 }

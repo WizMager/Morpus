@@ -1,6 +1,5 @@
 using Scellecs.Morpeh;
 using Unity.IL2CPP.CompilerServices;
-using UnityEngine;
 
 [Il2CppSetOption(Option.NullChecks, false)]
 [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
@@ -29,7 +28,7 @@ public sealed class DealDamageSystem : ISystem
     public void OnUpdate(float deltaTime) 
     {
         var playerEntity = _playerFilter.First();
-        ref var targetCount = ref _targetCountStash.Get(playerEntity).targets;
+        ref var targetCount = ref _targetCountStash.Get(playerEntity).targetsNumber;
         
         if (targetCount == 0)
             return;

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Utils;
 
-namespace Configs.Enemy
+namespace Configs
 {
     [CreateAssetMenu(fileName = "EnemyConfig", menuName = "Configs/EnemyConfig")]
     public class EnemyConfig : ScriptableObject

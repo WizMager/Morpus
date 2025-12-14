@@ -1,5 +1,5 @@
 using System;
-using Configs.Enemy;
+using Configs;
 using Scellecs.Morpeh;
 using Services.SpawnEnemyPosition;
 using Services.UiService;
@@ -57,12 +57,13 @@ public sealed class RespawnEnemySystem : ISystem
         _materialPropertyBlock = new MaterialPropertyBlock();
     }
 
-    public void OnUpdate(float deltaTime) 
+    public void OnUpdate(float deltaTime)
     {
         foreach (var deadEntity in _deadFilter)
         {
-            ref var targets = ref _targetsStash.Get(_playerFilter.First());
-            ref var targetCount = ref _targetCountStash.Get(_playerFilter.First());
+            var playerEntity = _playerFilter.First();
+            ref var targets = ref _targetsStash.Get(playerEntity);
+            ref var targetCount = ref _targetCountStash.Get(playerEntity);
 
             for (var i = 0; i < targets.targets.Length; i++)
             {
@@ -70,12 +71,12 @@ public sealed class RespawnEnemySystem : ISystem
                     continue;
                 
                 targets.activeTarget[i] = false;
-                targetCount.targets--;
+                targetCount.targetsNumber--;
             }
             
             _deadStash.Remove(deadEntity);
             
-            ref var killCounter = ref _killCounterStash.Get(_playerFilter.First());
+            ref var killCounter = ref _killCounterStash.Get(playerEntity);
             killCounter.value++;
             _uiProvider.AddKillCounter(killCounter.value);
             
@@ -99,7 +100,7 @@ public sealed class RespawnEnemySystem : ISystem
     {
         ref var transform = ref _transformStash.Get(enemyEntity);
         
-        transform.transform.position = _spawnEnemyPositionService.GetPosition();
+        transform.value.position = _spawnEnemyPositionService.GetPosition();
     }
     
     private void SetColor(Entity entity, Color color)

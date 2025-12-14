@@ -1,11 +1,11 @@
-using Configs.Player;
+using Configs;
 using Scellecs.Morpeh;
 using Unity.IL2CPP.CompilerServices;
 
 [Il2CppSetOption(Option.NullChecks, false)]
 [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
 [Il2CppSetOption(Option.DivideByZeroChecks, false)]
-public sealed class SearchTargetSystem : IFixedSystem //may be refactoring for use Spatial Hash if need too much enemies
+public sealed class SearchTargetSystem : IFixedSystem //need refactoring for use Spatial Hash if need too much enemies
 {
     private readonly PlayerConfig _playerConfig;
     
@@ -42,7 +42,7 @@ public sealed class SearchTargetSystem : IFixedSystem //may be refactoring for u
     public void OnUpdate(float deltaTime)
     {
         var playerEntity = _playerFilter.First();
-        var playerPosition = _transformStash.Get(playerEntity).transform.position;
+        var playerPosition = _transformStash.Get(playerEntity).value.position;
         ref var attackRadius = ref _attackRadiusStash.Get(playerEntity).value;
         var attackRadiusSqr = attackRadius * attackRadius;
         for (var i = 0; i < _distances.Length; i++)
@@ -51,11 +51,11 @@ public sealed class SearchTargetSystem : IFixedSystem //may be refactoring for u
         }
         
         ref var targetCount = ref _targetCountStash.Get(playerEntity);
-        targetCount.targets = 0;
+        targetCount.targetsNumber = 0;
         
         foreach (var enemy in _enemyFilter)
         {
-            var sqrDistance = (_transformStash.Get(enemy).transform.position - playerPosition).sqrMagnitude;
+            var sqrDistance = (_transformStash.Get(enemy).value.position - playerPosition).sqrMagnitude;
             if (sqrDistance > attackRadiusSqr)
                 continue;
             
@@ -94,7 +94,7 @@ public sealed class SearchTargetSystem : IFixedSystem //may be refactoring for u
         if (!hasTargets)
             return;
         
-        targetCount.targets = targets;
+        targetCount.targetsNumber = targets;
         targetsComponent.targets = _targets;
     }
 

@@ -1,8 +1,7 @@
 ﻿using System;
 using UnityEngine;
-using Utils;
 
-namespace Configs.Enemy
+namespace Utils
 {
     [Serializable]
     public struct EnemyData

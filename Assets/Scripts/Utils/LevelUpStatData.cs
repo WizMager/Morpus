@@ -1,13 +1,13 @@
 ﻿using System;
-using Services.UiService;
 using UnityEngine;
 
-namespace Configs.Player
+namespace Utils
 {
     [Serializable]
-    public struct StatUpData
+    public struct LevelUpStatData
     {
         public EStat stat;
+        public float value;
         [Range(0, 100f)]
         public float chance;
     }
