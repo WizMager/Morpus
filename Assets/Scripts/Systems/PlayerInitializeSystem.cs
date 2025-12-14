@@ -1,5 +1,6 @@
 using System;
 using Configs;
+using Configs.Player;
 using Scellecs.Morpeh;
 using Unity.IL2CPP.CompilerServices;
 using UnityEngine;
@@ -37,6 +38,7 @@ public sealed class PlayerInitializeSystem : IInitializer
         AddMoveSpeed(playerEntity);
         AddDamagePerSecond(playerEntity);
         AddAttackRadius(playerEntity);
+        AddKillCounter(playerEntity);
         
         SetupCamera(playerInstance.transform);
     }
@@ -54,7 +56,8 @@ public sealed class PlayerInitializeSystem : IInitializer
         
         targetsStash.Add(playerEntity, new TargetsComponent
         {
-            targets = new Entity[_playerConfig.MaxTarget]
+            targets = new Entity[_playerConfig.MaxTarget],
+            activeTarget = new bool[_playerConfig.MaxTarget]
         });
     }
     
@@ -64,7 +67,7 @@ public sealed class PlayerInitializeSystem : IInitializer
         
         targetCountStash.Add(playerEntity, new TargetCountComponent
         {
-            currentTarget = 0,
+            targets = 0
         });
     }
     
@@ -115,6 +118,16 @@ public sealed class PlayerInitializeSystem : IInitializer
         damageRadiusStash.Add(playerEntity, new AttackRadiusComponent
         {
             value = _playerConfig.DamageRadius
+        });
+    }
+    
+    private void AddKillCounter(Entity playerEntity)
+    {
+        var killCounterStash = World.GetStash<KillCounterComponent>();
+        
+        killCounterStash.Add(playerEntity, new KillCounterComponent
+        {
+            value = 0
         });
     }
 

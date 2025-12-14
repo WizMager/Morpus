@@ -1,7 +1,10 @@
 ﻿using Configs;
 using Configs.Enemy;
+using Configs.Player;
 using Scellecs.Morpeh;
 using Services.SpawnEnemyPosition;
+using Services.UiService;
+using Ui;
 using UnityEngine;
 
 public class Bootstrap : MonoBehaviour
@@ -11,14 +14,20 @@ public class Bootstrap : MonoBehaviour
         [SerializeField] private EnemyConfig _enemyConfig;
         [SerializeField] private GameConfig _gameConfig;
         
+        [SerializeField] private GameHudWindow _gameHudWindow;
+        
         private World _world;
         private ISpawnEnemyPositionService _spawnEnemyPositionService;
+        private IUiProvider _uiProvider;
 
         private void Start()
         {
                 _world = World.Default;
                 
                 _spawnEnemyPositionService = new SpawnEnemyPositionService(1.5f, _gameConfig.EnemySpawnRadius, _world);
+                _uiProvider = new UiProvider(_playerConfig, _world);
+                
+                _gameHudWindow.Initialize(_uiProvider, _playerConfig);
                 
                 _world.AddSystemsGroup(order: 0, InitializeSystemsGroup());
                 _world.AddSystemsGroup(order: 1, UpdateSystemsGroup());
@@ -42,7 +51,8 @@ public class Bootstrap : MonoBehaviour
                 updateSystemGroup.AddSystem(new PlayerMoveSystem());
                 updateSystemGroup.AddSystem(new InputSystem());
                 updateSystemGroup.AddSystem(new DealDamageSystem());
-                updateSystemGroup.AddSystem(new RespawnEnemySystem(_spawnEnemyPositionService, _enemyConfig));
+                updateSystemGroup.AddSystem(new RespawnEnemySystem(_spawnEnemyPositionService, _enemyConfig, _uiProvider));
+                updateSystemGroup.AddSystem(new LevelUpSystem());
                 
                 return updateSystemGroup;
         }

@@ -8,4 +8,5 @@ using Unity.IL2CPP.CompilerServices;
 public struct TargetsComponent : IComponent
 {
     public Entity[] targets;
+    public bool[] activeTarget;
 }

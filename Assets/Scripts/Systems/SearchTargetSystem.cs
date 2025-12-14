@@ -1,4 +1,4 @@
-using Configs;
+using Configs.Player;
 using Scellecs.Morpeh;
 using Unity.IL2CPP.CompilerServices;
 
@@ -50,7 +50,8 @@ public sealed class SearchTargetSystem : IFixedSystem //may be refactoring for u
             _distances[i] = float.MaxValue;
         }
         
-        var targetCounter = 0;
+        ref var targetCount = ref _targetCountStash.Get(playerEntity);
+        targetCount.targets = 0;
         
         foreach (var enemy in _enemyFilter)
         {
@@ -72,22 +73,29 @@ public sealed class SearchTargetSystem : IFixedSystem //may be refactoring for u
                 _distances[i] = sqrDistance;
                 _targets[i] = enemy;
                 
-                if (targetCounter < _playerConfig.MaxTarget)
-                    targetCounter++;
+                break;
             }
         }
+
+        var hasTargets = false;
+        var targets = 0;
+        ref var targetsComponent = ref _targetsStash.Get(playerEntity);
         
-        if (targetCounter == 0)
+        for (var i = 0; i < _distances.Length; i++)
+        {
+            if (_distances[i] > attackRadiusSqr)
+                continue;
+
+            targetsComponent.activeTarget[i] = true;
+            hasTargets = true;
+            targets++;
+        }
+        
+        if (!hasTargets)
             return;
         
-        _targetCountStash.Set(playerEntity, new TargetCountComponent
-        {
-            currentTarget = targetCounter,
-        });
-        _targetsStash.Set(playerEntity, new TargetsComponent
-        {
-            targets = _targets
-        });
+        targetCount.targets = targets;
+        targetsComponent.targets = _targets;
     }
 
     public void Dispose()

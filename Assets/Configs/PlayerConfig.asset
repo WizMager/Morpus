@@ -15,3 +15,18 @@ MonoBehaviour:
   _moveSpeed: 1
   _damagePerSecond: 10
   _damageRadius: 2
+  _maxTarget: 3
+  _levelUpStep:
+  - stat: 0
+    value: 0.5
+  - stat: 1
+    value: 10
+  - stat: 2
+    value: 1
+  _statUpData:
+  - stat: 0
+    chance: 60
+  - stat: 1
+    chance: 30
+  - stat: 2
+    chance: 10

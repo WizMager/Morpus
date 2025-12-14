@@ -29,7 +29,7 @@ public sealed class DealDamageSystem : ISystem
     public void OnUpdate(float deltaTime) 
     {
         var playerEntity = _playerFilter.First();
-        ref var targetCount = ref _targetCountStash.Get(playerEntity).currentTarget;
+        ref var targetCount = ref _targetCountStash.Get(playerEntity).targets;
         
         if (targetCount == 0)
             return;
@@ -37,7 +37,7 @@ public sealed class DealDamageSystem : ISystem
         ref var damagePerSecond = ref _damagePerSecondStash.Get(playerEntity).value;
         var damageInFrame = damagePerSecond * deltaTime;
         ref var targets = ref _targetStash.Get(playerEntity).targets;
-        
+
         for (var i = 0; i < targetCount; i++)
         {
             if (_deadStash.Has(targets[i]))
@@ -45,6 +45,7 @@ public sealed class DealDamageSystem : ISystem
             
             var targetEntity = targets[i];
             ref var health = ref _healthStash.Get(targetEntity).value;
+            
             health -= damageInFrame;
             
             if (health <= 0)
