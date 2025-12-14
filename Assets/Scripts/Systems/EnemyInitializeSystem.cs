@@ -47,7 +47,7 @@ public sealed class EnemyInitializeSystem : IInitializer
             var enemyView = Object.Instantiate(_prefabsConfig.EnemyPrefab, _spawnEnemyPositionService.GetPosition(), Quaternion.identity).GetComponent<EnemyView>();
             var enemyEntity = World.CreateEntity();
 
-            AddEnemy(enemyEntity);
+            AddEnemy(enemyEntity, enemyView);
             AddHealth(enemyEntity, enemyData.health);
             AddTransform(enemyEntity, enemyView.transform);
             
@@ -55,11 +55,14 @@ public sealed class EnemyInitializeSystem : IInitializer
         }
     }
 
-    private void AddEnemy(Entity enemyEntity)
+    private void AddEnemy(Entity enemyEntity, EnemyView enemyView)
     {
         var enemyStash = World.GetStash<EnemyComponent>();
         
-        enemyStash.Add(enemyEntity, new EnemyComponent());
+        enemyStash.Add(enemyEntity, new EnemyComponent
+        {
+            enemyView = enemyView
+        });
     }
     
     private void AddHealth(Entity enemyEntity, float health)

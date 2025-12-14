@@ -22,6 +22,7 @@ public class Bootstrap : MonoBehaviour
                 
                 _world.AddSystemsGroup(order: 0, InitializeSystemsGroup());
                 _world.AddSystemsGroup(order: 1, UpdateSystemsGroup());
+                _world.AddSystemsGroup(order: 2, FixedUpdateSystemsGroup());
         }
 
         private SystemsGroup InitializeSystemsGroup()
@@ -40,7 +41,18 @@ public class Bootstrap : MonoBehaviour
                 
                 updateSystemGroup.AddSystem(new PlayerMoveSystem());
                 updateSystemGroup.AddSystem(new InputSystem());
+                updateSystemGroup.AddSystem(new DealDamageSystem());
+                updateSystemGroup.AddSystem(new DeadSystem());
                 
                 return updateSystemGroup;
+        }
+        
+        private SystemsGroup FixedUpdateSystemsGroup()
+        {
+                var fixedUpdateSystemsGroup = _world.CreateSystemsGroup();
+                
+                fixedUpdateSystemsGroup.AddSystem(new SearchTargetSystem(_playerConfig));
+                
+                return fixedUpdateSystemsGroup;
         }
 }

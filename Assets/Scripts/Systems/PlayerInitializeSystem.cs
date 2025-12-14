@@ -1,7 +1,9 @@
+using System;
 using Configs;
 using Scellecs.Morpeh;
 using Unity.IL2CPP.CompilerServices;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 [Il2CppSetOption(Option.NullChecks, false)]
 [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
@@ -28,6 +30,8 @@ public sealed class PlayerInitializeSystem : IInitializer
         var playerEntity = World.CreateEntity();
         
         AddPlayer(playerEntity);
+        AddTargets(playerEntity);
+        AddTargetsCount(playerEntity);
         AddTransform(playerEntity, playerInstance.transform);
         AddDirection(playerEntity);
         AddMoveSpeed(playerEntity);
@@ -42,6 +46,26 @@ public sealed class PlayerInitializeSystem : IInitializer
         var playerStash = World.GetStash<PlayerComponent>();
         
         playerStash.Add(playerEntity, new PlayerComponent());
+    }
+    
+    private void AddTargets(Entity playerEntity)
+    {
+        var targetsStash = World.GetStash<TargetsComponent>();
+        
+        targetsStash.Add(playerEntity, new TargetsComponent
+        {
+            targets = new Entity[_playerConfig.MaxTarget]
+        });
+    }
+    
+    private void AddTargetsCount(Entity playerEntity)
+    {
+        var targetCountStash = World.GetStash<TargetCountComponent>();
+        
+        targetCountStash.Add(playerEntity, new TargetCountComponent
+        {
+            currentTarget = 0,
+        });
     }
     
     private void AddTransform(Entity playerEntity, Transform playerTransform)

@@ -1,12 +1,11 @@
 using Scellecs.Morpeh;
 using Unity.IL2CPP.CompilerServices;
-using Views;
 
 [System.Serializable]
 [Il2CppSetOption(Option.NullChecks, false)]
 [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
 [Il2CppSetOption(Option.DivideByZeroChecks, false)]
-public struct EnemyComponent : IComponent 
+public struct TargetCountComponent : IComponent
 {
-    public EnemyView enemyView;
+    public int currentTarget;
 }
