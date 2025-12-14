@@ -1,8 +1,6 @@
-using System;
 using Scellecs.Morpeh;
 using Services.UiService;
 using Unity.IL2CPP.CompilerServices;
-using UnityEngine;
 
 [Il2CppSetOption(Option.NullChecks, false)]
 [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
@@ -50,8 +48,6 @@ public sealed class LevelUpSystem : ISystem
                     ref var radius = ref _attackRadiusStash.Get(playerEntity);
                     radius.value += levelUpComponent.statData.value;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
 
             World.RemoveEntity(entity);
