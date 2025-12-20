@@ -63,6 +63,9 @@ public sealed class InputSystem : ISystem
     public void Dispose()
     {
         _inputActions.Disable();
+#if UNITY_EDITOR
+        return; //Disable error in editor
+#endif
         _inputActions.Dispose();
     }
 }
