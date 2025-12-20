@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Configs;
 using Scellecs.Morpeh;
@@ -11,6 +10,9 @@ using UnityEngine;
 public sealed class SearchTargetSystem : IFixedSystem
 {
     private readonly PlayerConfig _playerConfig;
+    private readonly List<(Entity entity, float sqrDistance)> _candidates;
+    private readonly HashSet<Entity> _newTargets;
+    private readonly HashSet<Entity> _currentTargets;
     
     private Filter _playerFilter;
     private Filter _enemyFilter;
@@ -19,12 +21,13 @@ public sealed class SearchTargetSystem : IFixedSystem
     private Stash<AttackRadiusSqrComponent> _attackRadiusStash;
     private Stash<TargetComponent> _targetStash;
 
-    private List<(Entity entity, float sqrDistance)> _candidates;
-
     public SearchTargetSystem(PlayerConfig playerConfig)
     {
         _playerConfig = playerConfig;
+        
         _candidates = new List<(Entity entity, float sqrDistance)>(_playerConfig.MaxTarget);
+        _newTargets = new HashSet<Entity>(_playerConfig.MaxTarget);
+        _currentTargets = new HashSet<Entity>(_playerConfig.MaxTarget);
     }
 
     public World World { get; set;}
@@ -56,31 +59,28 @@ public sealed class SearchTargetSystem : IFixedSystem
         }
         
         _candidates.Sort((a, b) => a.sqrDistance.CompareTo(b.sqrDistance));
+        
         var targetsToSelect = Mathf.Min(_playerConfig.MaxTarget, _candidates.Count);
         
-        var newTargets = new HashSet<Entity>();
+        _newTargets.Clear();
         for (var i = 0; i < targetsToSelect; i++)
         {
-            newTargets.Add(_candidates[i].entity);
+            _newTargets.Add(_candidates[i].entity);
         }
         
-        var currentTargets = new HashSet<Entity>();
+        _currentTargets.Clear();
         foreach (var currentTarget in _currentTargetsFilter)
         {
-            currentTargets.Add(currentTarget);
-        }
-        
-        foreach (var currentTarget in currentTargets)
-        {
-            if (!newTargets.Contains(currentTarget))
+            if (!_newTargets.Contains(currentTarget))
             {
                 _targetStash.Remove(currentTarget);
             }
         }
         
-        foreach (var newTarget in newTargets)
+        // Добавляем компоненты новым целям
+        foreach (var newTarget in _newTargets)
         {
-            if (!currentTargets.Contains(newTarget))
+            if (!_currentTargets.Contains(newTarget))
             {
                 _targetStash.Add(newTarget);
             }
