@@ -5,6 +5,8 @@ namespace Services.SpawnEnemyPosition
 {
     public class SpawnEnemyPositionService : ISpawnEnemyPositionService
     {
+        private const int MAX_ATTEMPTS = 10;
+        
         private readonly float _safeRadiusSqr;
         private readonly float _spawnRadius;
         private readonly Filter _filter;
@@ -23,7 +25,6 @@ namespace Services.SpawnEnemyPosition
         {
             Vector3 candidate;
             var attempts = 0;
-            var maxAttempts = 10;
             
             var playerPosition = _transformStash.Get(_filter.First()).value.position;
         
@@ -33,7 +34,7 @@ namespace Services.SpawnEnemyPosition
             
                 attempts++;
                 
-                if (attempts >= maxAttempts) 
+                if (attempts >= MAX_ATTEMPTS) 
                 {
                     candidate = new Vector3(randomCircle.x, 0, randomCircle.y);
                     break;

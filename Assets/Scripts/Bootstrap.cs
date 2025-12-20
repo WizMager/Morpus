@@ -5,13 +5,16 @@ using Services.UiService;
 using Ui;
 using UnityEngine;
 
-public class Bootstrap : MonoBehaviour
+public class Bootstrap : MonoBehaviour  //Can be used Zenject or other DI container if need instead this class
 {
+        [Header("Configs:")]
         [SerializeField] private PrefabsConfig _prefabsConfig;
         [SerializeField] private PlayerConfig _playerConfig;
         [SerializeField] private EnemyConfig _enemyConfig;
         [SerializeField] private GameConfig _gameConfig;
         
+        [Space]
+        [Header("Windows:")]
         [SerializeField] private GameHudWindow _gameHudWindow;
         
         private World _world;
