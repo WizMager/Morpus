@@ -12,7 +12,6 @@ public sealed class SearchTargetSystem : IFixedSystem
     private readonly PlayerConfig _playerConfig;
     private readonly List<(Entity entity, float sqrDistance)> _candidates;
     private readonly HashSet<Entity> _newTargets;
-    private readonly HashSet<Entity> _currentTargets;
     
     private Filter _playerFilter;
     private Filter _enemyFilter;
@@ -21,16 +20,15 @@ public sealed class SearchTargetSystem : IFixedSystem
     private Stash<AttackRadiusSqrComponent> _attackRadiusStash;
     private Stash<TargetComponent> _targetStash;
 
+    public World World { get; set;}
+    
     public SearchTargetSystem(PlayerConfig playerConfig)
     {
         _playerConfig = playerConfig;
         
         _candidates = new List<(Entity entity, float sqrDistance)>(_playerConfig.MaxTarget);
         _newTargets = new HashSet<Entity>(_playerConfig.MaxTarget);
-        _currentTargets = new HashSet<Entity>(_playerConfig.MaxTarget);
     }
-
-    public World World { get; set;}
 
     public void OnAwake() 
     {
@@ -68,7 +66,6 @@ public sealed class SearchTargetSystem : IFixedSystem
             _newTargets.Add(_candidates[i].entity);
         }
         
-        _currentTargets.Clear();
         foreach (var currentTarget in _currentTargetsFilter)
         {
             if (!_newTargets.Contains(currentTarget))
@@ -77,10 +74,9 @@ public sealed class SearchTargetSystem : IFixedSystem
             }
         }
         
-        // Добавляем компоненты новым целям
         foreach (var newTarget in _newTargets)
         {
-            if (!_currentTargets.Contains(newTarget))
+            if (!_targetStash.Has(newTarget))
             {
                 _targetStash.Add(newTarget);
             }
