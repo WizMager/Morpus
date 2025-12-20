@@ -13,7 +13,7 @@ public sealed class LevelUpSystem : ISystem
     private Stash<LevelUpComponent> _levelUpStash;
     private Stash<MoveSpeedComponent> _moveSpeedStash;
     private  Stash<DamagePerSecondComponent> _damagePerSecondStash;
-    private Stash<AttackRadiusComponent> _attackRadiusStash;
+    private Stash<AttackRadiusSqrComponent> _attackRadiusStash;
     
     
     public World World { get; set;}
@@ -25,7 +25,7 @@ public sealed class LevelUpSystem : ISystem
         _levelUpStash = World.GetStash<LevelUpComponent>();
         _moveSpeedStash = World.GetStash<MoveSpeedComponent>();
         _damagePerSecondStash = World.GetStash<DamagePerSecondComponent>();
-        _attackRadiusStash = World.GetStash<AttackRadiusComponent>();
+        _attackRadiusStash = World.GetStash<AttackRadiusSqrComponent>();
     }
 
     public void OnUpdate(float deltaTime) 

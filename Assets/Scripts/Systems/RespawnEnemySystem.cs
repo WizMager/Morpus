@@ -24,8 +24,6 @@ public sealed class RespawnEnemySystem : ISystem
     private Stash<TransformComponent> _transformStash;
     private Stash<HealthComponent> _healthStash;
     private Stash<KillCounterComponent> _killCounterStash;
-    private Stash<TargetCountComponent> _targetCountStash;
-    private Stash<TargetsComponent> _targetsStash;
     
     private MaterialPropertyBlock _materialPropertyBlock;
 
@@ -51,8 +49,6 @@ public sealed class RespawnEnemySystem : ISystem
         _transformStash = World.GetStash<TransformComponent>();
         _healthStash = World.GetStash<HealthComponent>();
         _killCounterStash = World.GetStash<KillCounterComponent>();
-        _targetCountStash = World.GetStash<TargetCountComponent>();
-        _targetsStash = World.GetStash<TargetsComponent>();
         
         _materialPropertyBlock = new MaterialPropertyBlock();
     }
@@ -62,17 +58,6 @@ public sealed class RespawnEnemySystem : ISystem
         foreach (var deadEntity in _deadFilter)
         {
             var playerEntity = _playerFilter.First();
-            ref var targets = ref _targetsStash.Get(playerEntity);
-            ref var targetCount = ref _targetCountStash.Get(playerEntity);
-
-            for (var i = 0; i < targets.targets.Length; i++)
-            {
-                if (targets.targets[i] != deadEntity)
-                    continue;
-                
-                targets.activeTarget[i] = false;
-                targetCount.targetsNumber--;
-            }
             
             _deadStash.Remove(deadEntity);
             

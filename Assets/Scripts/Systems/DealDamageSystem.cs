@@ -7,49 +7,40 @@ using Unity.IL2CPP.CompilerServices;
 public sealed class DealDamageSystem : ISystem 
 {
     private Filter _playerFilter;
-    private Stash<TargetsComponent> _targetStash;
-    private Stash<TargetCountComponent> _targetCountStash;
+    private Filter _targetsFilter;
     private Stash<HealthComponent> _healthStash;
     private Stash<DamagePerSecondComponent> _damagePerSecondStash;
     private Stash<DeadComponent> _deadStash;
+    private Stash<TargetComponent> _targetStash;
     
     public World World { get; set;}
 
     public void OnAwake() 
     {
-        _playerFilter = World.Filter.With<PlayerComponent>().With<TargetsComponent>().Build();
-        _targetStash = World.GetStash<TargetsComponent>();
-        _targetCountStash = World.GetStash<TargetCountComponent>();
+        _playerFilter = World.Filter.With<PlayerComponent>().Build();
+        _targetsFilter = World.Filter.With<TargetComponent>().With<HealthComponent>().Without<DeadComponent>().Build();
         _healthStash = World.GetStash<HealthComponent>();
         _damagePerSecondStash = World.GetStash<DamagePerSecondComponent>();
         _deadStash = World.GetStash<DeadComponent>();
+        _targetStash = World.GetStash<TargetComponent>();
     }
 
     public void OnUpdate(float deltaTime) 
     {
         var playerEntity = _playerFilter.First();
-        ref var targetCount = ref _targetCountStash.Get(playerEntity).targetsNumber;
-        
-        if (targetCount == 0)
-            return;
-        
-        ref var damagePerSecond = ref _damagePerSecondStash.Get(playerEntity).value;
-        var damageInFrame = damagePerSecond * deltaTime;
-        ref var targets = ref _targetStash.Get(playerEntity).targets;
+        ref var damagePerSecond = ref _damagePerSecondStash.Get(playerEntity);
+        var damageInFrame = damagePerSecond.value * deltaTime;
 
-        for (var i = 0; i < targetCount; i++)
+        foreach (var targetEntity in _targetsFilter)
         {
-            if (_deadStash.Has(targets[i]))
-                continue;
+            ref var health = ref _healthStash.Get(targetEntity);
             
-            var targetEntity = targets[i];
-            ref var health = ref _healthStash.Get(targetEntity).value;
+            health.value -= damageInFrame;
             
-            health -= damageInFrame;
-            
-            if (health <= 0)
+            if (health.value <= 0)
             {
                 _deadStash.Add(targetEntity);
+                _targetStash.Remove(targetEntity);
             }
         }
     }

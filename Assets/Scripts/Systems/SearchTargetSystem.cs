@@ -1,101 +1,90 @@
+using System;
+using System.Collections.Generic;
 using Configs;
 using Scellecs.Morpeh;
 using Unity.IL2CPP.CompilerServices;
+using UnityEngine;
 
 [Il2CppSetOption(Option.NullChecks, false)]
 [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
 [Il2CppSetOption(Option.DivideByZeroChecks, false)]
-public sealed class SearchTargetSystem : IFixedSystem //need refactoring for use Spatial Hash if need too much enemies
+public sealed class SearchTargetSystem : IFixedSystem
 {
     private readonly PlayerConfig _playerConfig;
     
     private Filter _playerFilter;
     private Filter _enemyFilter;
+    private Filter _currentTargetsFilter;
     private Stash<TransformComponent> _transformStash;
-    private Stash<TargetsComponent> _targetsStash;
-    private Stash<TargetCountComponent> _targetCountStash;
-    private Stash<AttackRadiusComponent> _attackRadiusStash;
-    
-    private float[] _distances;
-    private Entity[] _targets;
+    private Stash<AttackRadiusSqrComponent> _attackRadiusStash;
+    private Stash<TargetComponent> _targetStash;
+
+    private List<(Entity entity, float sqrDistance)> _candidates;
 
     public SearchTargetSystem(PlayerConfig playerConfig)
     {
         _playerConfig = playerConfig;
+        _candidates = new List<(Entity entity, float sqrDistance)>(_playerConfig.MaxTarget);
     }
 
     public World World { get; set;}
 
     public void OnAwake() 
     {
-        _playerFilter = World.Filter.With<PlayerComponent>().With<TargetsComponent>().With<TargetCountComponent>().Build();
+        _playerFilter = World.Filter.With<PlayerComponent>().Build();
         _enemyFilter = World.Filter.With<EnemyComponent>().Without<DeadComponent>().Build();
+        _currentTargetsFilter = World.Filter.With<EnemyComponent>().With<TargetComponent>().Without<DeadComponent>().Build();
         _transformStash = World.GetStash<TransformComponent>();
-        _targetsStash = World.GetStash<TargetsComponent>();
-        _targetCountStash = World.GetStash<TargetCountComponent>();
-        _attackRadiusStash = World.GetStash<AttackRadiusComponent>();
-        
-        _distances = new float[_playerConfig.MaxTarget];
-        _targets = new Entity[_playerConfig.MaxTarget];
+        _attackRadiusStash = World.GetStash<AttackRadiusSqrComponent>();
+        _targetStash = World.GetStash<TargetComponent>();
     }
 
     public void OnUpdate(float deltaTime)
     {
         var playerEntity = _playerFilter.First();
-        var playerPosition = _transformStash.Get(playerEntity).value.position;
-        ref var attackRadius = ref _attackRadiusStash.Get(playerEntity).value;
-        var attackRadiusSqr = attackRadius * attackRadius;
-        for (var i = 0; i < _distances.Length; i++)
-        {
-            _distances[i] = float.MaxValue;
-        }
-        
-        ref var targetCount = ref _targetCountStash.Get(playerEntity);
-        targetCount.targetsNumber = 0;
+        ref var playerTransform = ref _transformStash.Get(playerEntity).value;
+        ref var attackRadiusSqr = ref _attackRadiusStash.Get(playerEntity).value;
+        _candidates.Clear();
         
         foreach (var enemy in _enemyFilter)
         {
-            var sqrDistance = (_transformStash.Get(enemy).value.position - playerPosition).sqrMagnitude;
-            if (sqrDistance > attackRadiusSqr)
-                continue;
-            
-            for (var i = 0; i < _distances.Length; i++)
+            var sqrDistance = (_transformStash.Get(enemy).value.position - playerTransform.position).sqrMagnitude;
+            if (sqrDistance <= attackRadiusSqr)
             {
-                if (sqrDistance >= _distances[i])
-                    continue;
-                
-                for (var j = _distances.Length - 1; j > i; j--)
-                {
-                    _distances[j] = _distances[j - 1];
-                    _targets[j] = _targets[j - 1];
-                }
-
-                _distances[i] = sqrDistance;
-                _targets[i] = enemy;
-                
-                break;
+                _candidates.Add((enemy, sqrDistance));
             }
         }
-
-        var hasTargets = false;
-        var targets = 0;
-        ref var targetsComponent = ref _targetsStash.Get(playerEntity);
         
-        for (var i = 0; i < _distances.Length; i++)
+        _candidates.Sort((a, b) => a.sqrDistance.CompareTo(b.sqrDistance));
+        var targetsToSelect = Mathf.Min(_playerConfig.MaxTarget, _candidates.Count);
+        
+        var newTargets = new HashSet<Entity>();
+        for (var i = 0; i < targetsToSelect; i++)
         {
-            if (_distances[i] > attackRadiusSqr)
-                continue;
-
-            targetsComponent.activeTarget[i] = true;
-            hasTargets = true;
-            targets++;
+            newTargets.Add(_candidates[i].entity);
         }
         
-        if (!hasTargets)
-            return;
+        var currentTargets = new HashSet<Entity>();
+        foreach (var currentTarget in _currentTargetsFilter)
+        {
+            currentTargets.Add(currentTarget);
+        }
         
-        targetCount.targetsNumber = targets;
-        targetsComponent.targets = _targets;
+        foreach (var currentTarget in currentTargets)
+        {
+            if (!newTargets.Contains(currentTarget))
+            {
+                _targetStash.Remove(currentTarget);
+            }
+        }
+        
+        foreach (var newTarget in newTargets)
+        {
+            if (!currentTargets.Contains(newTarget))
+            {
+                _targetStash.Add(newTarget);
+            }
+        }
     }
 
     public void Dispose()

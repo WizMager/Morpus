@@ -17,7 +17,7 @@ namespace Services.UiService
         private readonly Stash<LevelUpComponent> _levelUpStash;
         private readonly Stash<MoveSpeedComponent> _moveSpeedStash;
         private readonly Stash<DamagePerSecondComponent> _damagePerSecondStash;
-        private readonly Stash<AttackRadiusComponent> _attackRadiusStash;
+        private readonly Stash<AttackRadiusSqrComponent> _attackRadiusStash;
 
         public UiProvider(
             PlayerConfig playerConfig, 
@@ -31,7 +31,7 @@ namespace Services.UiService
             _levelUpStash = _world.GetStash<LevelUpComponent>();
             _moveSpeedStash = _world.GetStash<MoveSpeedComponent>();
             _damagePerSecondStash = _world.GetStash<DamagePerSecondComponent>();
-            _attackRadiusStash = _world.GetStash<AttackRadiusComponent>();
+            _attackRadiusStash = _world.GetStash<AttackRadiusSqrComponent>();
         }
 
         public IObservable<StatData> OnStatUp => _statUpCommand;

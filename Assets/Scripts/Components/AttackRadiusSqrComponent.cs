@@ -5,7 +5,7 @@ using Unity.IL2CPP.CompilerServices;
 [Il2CppSetOption(Option.NullChecks, false)]
 [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
 [Il2CppSetOption(Option.DivideByZeroChecks, false)]
-public struct TargetCountComponent : IComponent
+public struct AttackRadiusSqrComponent : IComponent 
 {
-    public int targetsNumber;
+    public float value;
 }
